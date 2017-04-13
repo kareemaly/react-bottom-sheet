@@ -1,7 +1,7 @@
 {
   "name": "react-bottom-sheet",
-  "version": "1.2.2",
-  "description": "React Items Carousel",
+  "version": "1.0.0",
+  "description": "React Bottom Sheet",
   "homepage": "https://github.com/bitriddler/react-bottom-sheet",
   "main": "index.js",
   "license": "MIT",
