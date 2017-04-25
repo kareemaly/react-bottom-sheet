@@ -11,7 +11,7 @@ const BottomSheetWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, ${(props) => props.opacity});
   display: flex;
@@ -28,6 +28,7 @@ const InnerContentWrapper = styled.div`
   -webkit-overflow-scrolling: touch;
   background: #FFF;
   max-height: ${(props) => props.maxHeight};
+  ${(props) => props.minHeight && `min-height: ${props.minHeight}`};
   width: 100vw;
 `;
 
@@ -45,6 +46,9 @@ export default class BottomSheetModal extends React.Component {
     onRequestClose: React.PropTypes.func.isRequired,
     zIndex: React.PropTypes.number,
     maxHeight: React.PropTypes.string,
+    minHeight: React.PropTypes.string,
+    bottomSheetHeader: React.PropTypes.element,
+    bottomSheetFooter: React.PropTypes.element,
   };
 
   static defaultProps = {
@@ -64,14 +68,14 @@ export default class BottomSheetModal extends React.Component {
     });
   }
 
-  getInitialFrame() {
+  getInitialFrame = () => {
     return {
       translateY: this.state.childrenHeight,
       opacity: 0,
     };
   }
 
-  calculateNextFrame() {
+  calculateNextFrame = () => {
     if(this.props.open) {
       return {
         translateY: spring(0),
@@ -88,28 +92,21 @@ export default class BottomSheetModal extends React.Component {
     }
   }
 
-  getBottomSheetContainerStyle(opacity) {
-    return autoprefixer({
-    });
-  }
-
-  onPanEnd(e) {
+  onPanEnd = (e) => {
     if(this.lastDeltaY > 50) {
       this.props.onRequestClose();
     }
   }
 
-  onPanStart(e) {
+  onPanStart = (e) => {
     this.lastDeltaY = 0;
   }
 
-  onPan(e) {
+  onPan = (e) => {
     this.lastDeltaY = e.deltaY;
   }
 
-  getCurrentTime() {
-    return new Date().getTime();
-  }
+  getCurrentTime = () => new Date().getTime();
 
   onContainerClick = () => {
     // Wait to see if the content is clicked as well
@@ -128,11 +125,11 @@ export default class BottomSheetModal extends React.Component {
   }
 
   // Consider the animation has finished if the distance to leave the screen is less than 5px
-  hasAnimationFinished(translateY) {
+  hasAnimationFinished = (translateY) => {
     return (this.state.childrenHeight - translateY) < 5;
   }
 
-  renderChildren(translateY, opacity) {
+  renderChildren = (translateY, opacity) => {
     // If the animation has finished and requested animation was to hide the modal
     // Then we dont need to render the content 
     if(this.hasAnimationFinished(translateY) && !this.props.open) {
@@ -141,7 +138,7 @@ export default class BottomSheetModal extends React.Component {
 
     return (
       <BottomSheetWrapper
-        onClick={this.onContfainerClick}
+        onClick={this.onContainerClick}
         opacity={opacity}
         zIndex={this.props.zIndex}
       >
@@ -160,10 +157,12 @@ export default class BottomSheetModal extends React.Component {
             <InnerContentWrapper
               className={this.props.className}
               onClick={this.onContentClick}
+              minHeight={this.props.minHeight}
               maxHeight={this.props.maxHeight}
             >
               {this.props.children}
             </InnerContentWrapper>
+            {this.props.bottomSheetFooter && this.props.bottomSheetFooter}
           </ContentWrapper>
         </Measure>
       </BottomSheetWrapper>
@@ -174,7 +173,8 @@ export default class BottomSheetModal extends React.Component {
     return (
       <Motion
         defaultStyle={this.getInitialFrame()}
-        style={this.calculateNextFrame()}>
+        style={this.calculateNextFrame()}
+      >
         {({ translateY, opacity }) => this.renderChildren(translateY, opacity)}
       </Motion>
     );
