@@ -40,14 +40,40 @@ const InnerContentWrapper = styled.div`
  */
 export default class BottomSheetModal extends React.Component {
   static propTypes = {
+    /**
+     * Bottom sheet content className.
+     */
     className: React.PropTypes.string,
+    /**
+     * If set to `true` the bottom sheet will open.
+     */
     open: React.PropTypes.bool,
-    // This method will be called when this component requests itself to be closed
+    /**
+     * This method will be called when an action is made to close this bottom sheet.
+     * For example clicking on the overlay.
+     */
     onRequestClose: React.PropTypes.func.isRequired,
+    /**
+     * css z-index value for the bottom sheet
+     */
     zIndex: React.PropTypes.number,
+    /**
+     * css max-height value for the bottom sheet.
+     * Numbers are not allowed, you have to pass 10px as a string instead
+     */
     maxHeight: React.PropTypes.string,
+    /**
+     * css min-height value for the bottom sheet.
+     * Numbers are not allowed, you have to pass 10px as a string instead
+     */
     minHeight: React.PropTypes.string,
+    /**
+     * If passed this element will render above the content.
+     */
     bottomSheetHeader: React.PropTypes.element,
+    /**
+     * If passed this element will render under the content.
+     */
     bottomSheetFooter: React.PropTypes.element,
   };
 

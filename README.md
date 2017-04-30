@@ -1,11 +1,14 @@
 react-bottom-sheet
 ---------------
 
-Installing
+Installation
 ------------
 ```
 $ npm install react-bottom-sheet --save
 ```
+
+[Demos](http://bitriddler.com/playground/bottom-sheet)
+--------------
 
 Example
 --------------
@@ -15,27 +18,42 @@ import React from 'react';
 import BottomSheet from 'react-bottom-sheet';
 
 export default class Test extends React.Component {
-  createSlideItem(number) {
-    return (
-      <div style={{ height: 200, background: '#333' }}>{number}</div>
-    );
+
+  componentWillMount() {
+    this.setState({
+      showSheet: false,
+    });
   }
 
   render() {
     return (
-      <BottomSheet canCenterOne={false} firstItemGutter={24} lastItemGutter={24} gutter={12} numberOfCards={2}>
-        {this.createSlideItem(1)}
-        {this.createSlideItem(2)}
-        {this.createSlideItem(3)}
-        {this.createSlideItem(4)}
-        {this.createSlideItem(5)}
-        {this.createSlideItem(6)}
-        {this.createSlideItem(7)}
+      <BottomSheet open={this.state.showSheet} onRequestClose={() => this.setState({ showSheet: false })}>
+        <div>
+          <h1>Bottom sheet modal content</h1>
+          <ul>
+            <li>Animates from bottom to top</li>
+            <li>If the content height is more than the height of the device it will be scrollable.</li>
+            <li>Clicking on the grey area will close the modal</li>
+          </ul>
+        </div>
       </BottomSheet>
     );  
   }
 } 
 ```
+
+
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| className | string |  | Bottom sheet content className. |
+| open | bool | false | If set to `true` the bottom sheet will open. |
+| onRequestClose | func |  | This method will be called when an action is made to close this bottom sheet.For example clicking on the overlay. |
+| zIndex | number |  | css z-index value for the bottom sheet |
+| maxHeight | string | '100vh' | css max-height value for the bottom sheet.Numbers are not allowed, you have to pass 10px as a string instead |
+| minHeight | string |  | css min-height value for the bottom sheet.Numbers are not allowed, you have to pass 10px as a string instead |
+| bottomSheetHeader | element |  | If passed this element will render above the content. |
+| bottomSheetFooter | element |  | If passed this element will render under the content. |
 
 Contributing
 --------------
