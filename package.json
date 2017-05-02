@@ -40,6 +40,7 @@
     "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.6.2",
     "express": "^4.13.4",
+    "glob": "^7.1.1",
     "material-ui": "^0.16.1",
     "react-docgen": "^2.14.1",
     "react-dom": "15.3.2",

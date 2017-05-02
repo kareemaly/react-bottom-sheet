@@ -1,28 +1,53 @@
 const reactDocs = require('react-docgen');
 const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');
+const glob = require("glob");
 
-const componentInfo = reactDocs.parse(fs.readFileSync(path.join(__dirname, '../src/BottomSheet/index.js')).toString());
+glob(path.join(__dirname, '../src/*/index.js'), function(err, files) {
+  if(files.length === 0) {
+    throw new Error("No index file for the component!");
+  }
+  if(files.length > 1) {
+    throw new Error("More than index file found for the component!");
+  }
+  const component = fs.readFileSync(files[0]).toString();
+  const readmeProps = getComponentReadmeProps(component);
 
-let readmeProps = `| Property | Type | Default | Description |
-| --- | --- | --- | --- |`;
+  const actualReadme = fs.readFileSync(path.join(__dirname, '../README.md')).toString();
+  const pieces = actualReadme.split('Contributing');
+  const before = pieces[0].split('| Property')[0];
 
-for(const propertyName in componentInfo.props) {
-  const propInfo = componentInfo.props[propertyName];
-  const propertyType = propInfo.type.name;
-  const propertyDefault = propInfo.defaultValue ? propInfo.defaultValue.value : '';
-  const propertyDescription = propInfo.description;
-
-  readmeProps += `
-| ${propertyName} | ${propertyType} | ${propertyDefault} | ${propertyDescription.replace('|', ':').replace('\n', '')} |`;
-}
-
-const actualReadme = fs.readFileSync(path.join(__dirname, '../README.md')).toString();
-const pieces = actualReadme.split('Contributing');
-
-fs.writeFileSync(path.join(__dirname, '../README.md'), 
-`${pieces[0]}
-
-${readmeProps}
+  fs.writeFileSync(path.join(__dirname, '../README.md'), 
+  `${before}${readmeProps}
 
 Contributing${pieces[1]}`);
+});
+
+const getComponentReadmeProps = (component) => {
+  const componentInfo = reactDocs.parse(component);
+
+  let readmeProps = `| Property | Type | Default | Description |
+| --- | --- | --- | --- |`;
+
+  for(const propertyName in componentInfo.props) {
+    const propInfo = componentInfo.props[propertyName];
+    let propertyType = propInfo.type.name;
+    const propertyRequired = propInfo.required;
+    const propertyDefault = propInfo.defaultValue ? propInfo.defaultValue.value : '';
+    const propertyDescription = propInfo.description;
+
+    if(propertyType === 'arrayOf') {
+      propertyType += ` (${propInfo.type.value.name})`;
+    }
+
+    if(propertyType === 'shape') {
+      propertyType += ` (${_.keys(propInfo.type.value).join(', ')})`;
+    }
+
+    readmeProps += `
+| ${propertyName}${propertyRequired ? '*' : ''} | ${propertyType} | ${propertyDefault} | ${propertyDescription.replace('|', ':').replace('\n', '<br />')} |`;
+  }
+
+  return readmeProps;
+}
