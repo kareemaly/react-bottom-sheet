@@ -48,10 +48,10 @@ export default class Test extends React.Component {
 | --- | --- | --- | --- |
 | className | string |  | Bottom sheet content className. |
 | open | bool | false | If set to `true` the bottom sheet will open. |
-| onRequestClose* | func |  | This method will be called when an action is made to close this bottom sheet.<br />For example clicking on the overlay. |
+| onRequestClose* | func |  | This method will be called when an action is made to close this bottom sheet.<br />For example clicking on the overlay. |
 | zIndex | number |  | css z-index value for the bottom sheet |
-| maxHeight | string | '100vh' | css max-height value for the bottom sheet.<br />Numbers are not allowed, you have to pass 10px as a string instead |
-| minHeight | string |  | css min-height value for the bottom sheet.<br />Numbers are not allowed, you have to pass 10px as a string instead |
+| maxHeight | string | '100vh' | css max-height value for the bottom sheet.<br />Numbers are not allowed, you have to pass 10px as a string instead |
+| minHeight | string |  | css min-height value for the bottom sheet.<br />Numbers are not allowed, you have to pass 10px as a string instead |
 | bottomSheetHeader | element |  | If passed this element will render above the content. |
 | bottomSheetFooter | element |  | If passed this element will render under the content. |
 
