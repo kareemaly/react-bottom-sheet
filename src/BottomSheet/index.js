@@ -4,8 +4,9 @@ import {
   spring
 } from 'react-motion';
 import Measure from 'react-measure';
-import { getWindowHeight } from '../helpers/window';
 import styled from 'styled-components';
+import { getWindowHeight } from '../helpers/window';
+import RenderToLayer from './RenderToLayer';
 
 const BottomSheetWrapper = styled.div`
   position: fixed;
@@ -195,14 +196,18 @@ export default class BottomSheetModal extends React.Component {
     );
   }
 
+  renderLayer = () => (
+    <Motion
+      defaultStyle={this.getInitialFrame()}
+      style={this.calculateNextFrame()}
+    >
+      {({ translateY, opacity }) => this.renderChildren(translateY, opacity)}
+    </Motion>
+  );
+
   render = () => {
     return (
-      <Motion
-        defaultStyle={this.getInitialFrame()}
-        style={this.calculateNextFrame()}
-      >
-        {({ translateY, opacity }) => this.renderChildren(translateY, opacity)}
-      </Motion>
+      <RenderToLayer render={this.renderLayer} open={true} useLayerForClickAway={false} />
     );
   }
 }
